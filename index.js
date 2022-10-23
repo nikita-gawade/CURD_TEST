@@ -1,10 +1,19 @@
 const mysql=require('mysql2');
 const express=require('express');
 const bodyParser = require('body-parser');
+const helmet=require('helmet');
+const morgan=require('morgan'); 
+const axios=require('axios');
+
+
 var app=express();
-const bodyparse=require('body-parser');
-const { response } = require('express');
+
+
+
+
 app.use(bodyParser.json());
+app.use(helmet());
+app.use(morgan('tiny'));
 //console.log('done');
 var mysqlConnection=mysql.createConnection({
     host:'localhost',
@@ -25,11 +34,13 @@ mysqlConnection.connect((err)=>{
 app.listen(3000,()=>console.log('Express server running at port 3000'));
 
 //get all data 
-app.get('/employee',(res,req)=>{
+app.get('/employee',(req,res)=>{
     mysqlConnection.query('Select * from EMP_Master',(err,rows,field)=>
     {
         if(!err)
-        console.log(rows[0].Name);
+       { console.log(rows);
+        res.send(rows);
+       }
         else
         console.log(err);
 
@@ -42,7 +53,9 @@ app.get('/employee/:id',(req,res)=>{
     mysqlConnection.query('Select * from EMP_Master where Id=?',[req.params.id],(err,rows,field)=>
     {
         if(!err)
-        console.log(rows[0]);
+        {console.log(rows[0]);
+        res.send(rows[0]);
+        }
         else
         console.log(err);
         
