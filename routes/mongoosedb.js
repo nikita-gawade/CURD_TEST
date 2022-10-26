@@ -1,38 +1,20 @@
-const mysql=require('mysql2');
+
 const express=require('express');
 const bodyParser = require('body-parser');
-const helmet=require('helmet');
-const morgan=require('morgan'); 
+
 const axios=require('axios');
-const mongoose =require('mongoose');
-const Employee=require('./models/Employee');
+
+const Employee=require('../models/Employee');
 
 
 
-var app=express();
+var route=express.Router();
 
 
-app.use(bodyParser.json());
-app.use(helmet());
-app.use(morgan('tiny'));
-//console.log('done');
+route.use(bodyParser.json());
 
 
-
-var dburl="mongodb+srv://nikita_gawade:Nikita08@nodetest.ymfag5r.mongodb.net/Employee?retryWrites=true&w=majority"
-mongoose.connect(dburl,{useNewUrlParser:true,useUnifiedTopology:true})
-.then((result)=>
-{
-//console.log("Connected to mongodb");
-app.listen(3000,()=>console.log('Express server running at port 3000'));
-
-}).catch((err)=>
-{
-console.log(err);
-
-})
-
-app.get("/add-employee",(req,res)=>
+route.get("/add-employee",(req,res)=>
 {
 const emp=new Employee(
     {
@@ -53,7 +35,7 @@ emp.save().then((result)=>
 });
 
 
-app.get("/all-emp",(req,res)=>
+route.get("/all-emp",(req,res)=>
 {
     Employee.find().then((result)=>
     {
@@ -66,7 +48,7 @@ app.get("/all-emp",(req,res)=>
     
 });
 
-app.get("/emp-details",(req,res)=>
+route.get("/emp-details",(req,res)=>
 {
 Employee.findById("635819b3cd40e8bf85837d61").then((result)=>
 {
@@ -80,7 +62,7 @@ res.send(result);
 
 
 
-app.get("/emp-delete",(req,res)=>
+route.get("/emp-delete",(req,res)=>
 {
     Employee.deleteMany({Name:"Nikita"}).then((result)=>
 {
@@ -94,7 +76,7 @@ res.send(result);
 
 
 
-app.get("/emp-update",(req,res)=>
+route.get("/emp-update",(req,res)=>
 {
     Employee.updateOne({Name:"Nikita"},{Name:"Ankita"}).then((result)=>
 {
@@ -105,3 +87,45 @@ res.send(result);
     console.log(err);
 })
 });
+
+
+
+
+route.post("/add-employee",(req,res)=>
+{
+    const empreq=req.body;
+const emp=new Employee(
+    {
+        Name:empreq.Name,
+        Age:empreq.Age,
+        Contact_No:empreq.Contact_No,
+        Email:empreq.Email,
+        Active:empreq.Active
+    }
+);
+emp.save().then((result)=>
+{
+    res.send(result);
+    console.log("Data Added Successfully");
+}).catch((err)=>
+{
+    console.log(err);
+});
+});
+
+
+
+route.put("/emp-update",(req,res)=>
+{
+    const empdata=req.body;
+    Employee.updateOne({Name:empdata[0].Name},{Name:empdata[1].Name}).then((result)=>
+{
+console.log(result);
+res.send(result);
+}).catch((err)=>
+{
+    console.log(err);
+})
+});
+
+module.exports=route;
