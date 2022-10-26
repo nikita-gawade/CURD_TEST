@@ -9,8 +9,6 @@ const axios=require('axios');
 var app=express();
 
 
-
-
 app.use(bodyParser.json());
 app.use(helmet());
 app.use(morgan('tiny'));
