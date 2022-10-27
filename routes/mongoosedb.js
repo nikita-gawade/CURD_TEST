@@ -13,5 +13,4 @@ route.get("/emp-details",emp_controller.getempdetails);
 route.get("/emp-delete",emp_controller.deleteemp);
 route.put("/emp-update",emp_controller.updateemp);
 
-
 module.exports=route;

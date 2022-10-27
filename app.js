@@ -23,7 +23,7 @@ mongoose.connect(dburl,{useNewUrlParser:true,useUnifiedTopology:true})
 .then((result)=>
 {
 //console.log("Connected to mongodb");
-app.listen(3300,()=>console.log('Express server running at port 3300'));
+app.listen(3000,()=>console.log('Express server running at port 3000'));
 
 }).catch((err)=>
 {
